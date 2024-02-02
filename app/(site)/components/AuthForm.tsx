@@ -1,12 +1,16 @@
 "use client";
 
-import { handleClientScriptLoad } from "next/script";
+import axios from "axios";
+import { signIn, useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import Input from "../../../components/inputs/Input";
-import Button from "../../../components/inputs/Button";
-import AuthSocialButton from "../../../components/inputs/AuthSocialButton";
 import { BsGithub, BsGoogle } from "react-icons/bs";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+
+import Input from "@/app/components/inputs/Input";
+import AuthSocialButton from "../../components/inputs/AuthSocialButton";
+import Button from "../../components/inputs/Button";
+import { toast } from "react-hot-toast";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -37,9 +41,14 @@ const AuthForm = () => {
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
 
-    if (variant == "REGISTER") {
+    if (variant === "REGISTER") {
+      axios
+        .post("/api/register/", data)
+        .catch(() => toast.error("somthing wrong"));
     }
-    if (variant == "LOGIN") {
+
+    if (variant === "LOGIN") {
+      toast.error("somthing wrong");
     }
   };
 
@@ -48,41 +57,50 @@ const AuthForm = () => {
   };
 
   return (
-    <div
-      className="
-    	mt-6
-    	sm:mx-auto 
-    	sm:w-full 
-    	sm:max-w-md"
-    >
+    <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
       <div
         className="
-       bg-white
-       px-4
-       py-8
-       shadow
-       sm:rounded-lg
-       sm:px-10"
+        bg-white
+          px-4
+          py-8
+          shadow
+          sm:rounded-lg
+          sm:px-10
+        "
       >
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          {variant == "REGISTER" && (
-            <Input id="name" label="Name" register={register} errors={errors} />
+          {variant === "REGISTER" && (
+            <Input
+              disabled={isLoading}
+              register={register}
+              errors={errors}
+              required
+              id="name"
+              label="Name"
+              type="Name"
+            />
           )}
           <Input
+            disabled={isLoading}
+            register={register}
+            errors={errors}
+            required
             id="email"
             label="Email address"
-            register={register}
-            errors={errors}
+            type="email"
           />
           <Input
-            id="password"
-            label="Password"
+            disabled={isLoading}
             register={register}
             errors={errors}
+            required
+            id="password"
+            label="Password"
+            type="password"
           />
           <div>
             <Button disabled={isLoading} fullwidth type="submit">
-              {variant == "LOGIN" ? "Sign in" : "Register"}
+              {variant === "LOGIN" ? "Sign in" : "Register"}
             </Button>
           </div>
         </form>
@@ -105,6 +123,7 @@ const AuthForm = () => {
               </span>
             </div>
           </div>
+
           <div className="mt-6 flex gap-2">
             <AuthSocialButton
               icon={BsGithub}
@@ -115,23 +134,25 @@ const AuthForm = () => {
               onClick={() => socialAction("google")}
             />
           </div>
-          <div
-            className="
-	     flex
-	     gap-2
-	     justify-center 
-	     text-sm mt-6 px-2 
-	     text-gray-500
-            "
-          >
-            <div>
-              {variant == "LOGIN"
-                ? "New to message-app?"
-                : "Already have an account?"}
-            </div>
-            <div onClick={toggleVariant} className="underline cursor-pointer">
-              {variant == "LOGIN" ? "Create an account" : "Login"}
-            </div>
+        </div>
+        <div
+          className="
+            flex 
+            gap-2 
+            justify-center 
+            text-sm 
+            mt-6 
+            px-2 
+            text-gray-500
+          "
+        >
+          <div>
+            {variant === "LOGIN"
+              ? "New to Messenger?"
+              : "Already have an account?"}
+          </div>
+          <div onClick={toggleVariant} className="underline cursor-pointer">
+            {variant === "LOGIN" ? "Create an account" : "Login"}
           </div>
         </div>
       </div>
