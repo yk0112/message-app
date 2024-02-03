@@ -6,7 +6,6 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { email, name, password } = body;
-
     if (!email || !name || !password) {
       return new NextResponse("Missing info", { status: 400 });
     }
