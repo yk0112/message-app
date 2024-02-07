@@ -15,8 +15,16 @@ import { toast } from "react-hot-toast";
 type Variant = "LOGIN" | "REGISTER";
 
 const AuthForm = () => {
+  const session = useSession();
+  const router = useRouter();
   const [variant, setVariant] = useState<Variant>("LOGIN");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (session?.status == "authenticated") {
+      router.push("/users");
+    }
+  }, [session?.status, router]);
 
   const toggleVariant = useCallback(() => {
     if (variant === "LOGIN") {
@@ -44,7 +52,7 @@ const AuthForm = () => {
     if (variant === "REGISTER") {
       axios
         .post("/api/register", data)
-        .then(() => toast.success("success"))
+        .then(() => signIn("credentials", data))
         .catch(() => toast.error("somthing wrong"))
         .finally(() => setIsLoading(false));
     }
@@ -61,6 +69,7 @@ const AuthForm = () => {
 
           if (callback?.ok && !callback?.error) {
             toast.success("login!");
+            router.push("/users");
           }
         })
         .finally(() => setIsLoading(false));
