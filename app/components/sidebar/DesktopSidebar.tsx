@@ -47,7 +47,6 @@ const DesktopSidebar: React.FC<DesktopSidebar> = ({ currentUser }) => {
               onClick={item.onClick}
             />
           ))}
-          <Link href="/">Go</Link>
         </ul>
       </nav>
       <nav className="mt-4 flex flex-col justify-between items-center">
