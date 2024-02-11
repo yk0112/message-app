@@ -38,6 +38,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
       )}
     >
       <div className="px-5">
+        {/* グループチャット制作用ボタン */}
         <div className="flex justify-between mb-4 pt-4">
           <div className="text-2xl font-bold text-neutral-800">Messages</div>
           <div
@@ -54,6 +55,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
             <MdOutlineGroupAdd size={20} />
           </div>
         </div>
+        {/* チャットルーム一覧表示*/}
         {items.map((item) => (
           <ConversationBox
             key={item.id}

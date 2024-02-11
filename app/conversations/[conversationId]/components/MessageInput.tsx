@@ -20,6 +20,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
 }) => {
   return (
     <div className="relative w-full">
+      {/* メッセージ入力フィールド */}
       <input
         id={id}
         type={type}

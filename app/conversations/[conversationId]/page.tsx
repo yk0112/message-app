@@ -27,8 +27,11 @@ const ChatId = async ({ params }: { params: IParams }) => {
   return (
     <div className="lg:pl-80 h-full">
       <div className="h-full flex flex-col">
+        {/* グループ名, 送信先ユーザ名など*/}
         <Header conversation={conversation} />
-        <Body />
+        {/* メッセージ一覧など*/}
+        <Body initialMessages={messages} />
+        {/* メッセージ入力フォーム*/}
         <Form />
       </div>
     </div>
