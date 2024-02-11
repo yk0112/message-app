@@ -7,6 +7,7 @@ import useConversation from "@/app/hooks/useConversation";
 import { HiChevronLeft } from "react-icons/hi";
 import MessageInput from "./MessageInput";
 import { CldUploadButton } from "next-cloudinary";
+import { GrAttachment } from "react-icons/gr";
 
 const Form = () => {
   const { conversationId } = useConversation();
@@ -57,7 +58,7 @@ const Form = () => {
         onUpload={handleUpload}
         uploadPreset="ivjsicny"
       >
-        <HiPhoto size={30} className="text-sky-500" />
+        <GrAttachment size={25} className="text-green-500" />
       </CldUploadButton>
       {/* メッセージ送信フォーム */}
       <form
@@ -76,7 +77,7 @@ const Form = () => {
           className="
             rounded-full 
             p-2 
-            bg-sky-500 
+            bg-green-500 
             cursor-pointer 
             hover:bg-sky-600 
             transition

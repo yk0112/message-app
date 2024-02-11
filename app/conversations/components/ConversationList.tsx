@@ -4,8 +4,9 @@ import { FullConversationType } from "@/app/types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { clsx } from "clsx";
-import { MdOutlineGroupAdd } from "react-icons/md";
+import { MdOutlineAdd, MdOutlineGroupAdd } from "react-icons/md";
 import ConversationBox from "./ConversationBox";
+import { IoMdPersonAdd } from "react-icons/io";
 
 interface ConversationListProps {
   initialItems: FullConversationType[];
@@ -37,23 +38,9 @@ const ConversationList: React.FC<ConversationListProps> = ({
         isOpen ? "hidden" : "block w-full left-0",
       )}
     >
-      <div className="px-5">
-        {/* グループチャット制作用ボタン */}
+      <div className="px-5 h-[90%]">
         <div className="flex justify-between mb-4 pt-4">
           <div className="text-2xl font-bold text-neutral-800">Messages</div>
-          <div
-            className="
-                rounded-full 
-                p-2 
-                bg-gray-100 
-                text-gray-600 
-                cursor-pointer 
-                hover:opacity-75 
-                transition
-              "
-          >
-            <MdOutlineGroupAdd size={20} />
-          </div>
         </div>
         {/* チャットルーム一覧表示*/}
         {items.map((item) => (
@@ -63,6 +50,22 @@ const ConversationList: React.FC<ConversationListProps> = ({
             selected={conversationId === item.id}
           />
         ))}
+      </div>
+      {/* グループチャット制作用ボタン */}
+      <div
+        className="
+                rounded-full 
+                p-2 
+                bg-green-500
+                text-white 
+                cursor-pointer 
+                hover:opacity-75 
+		shadow-lg
+                transition
+		absolute bottom-5 right-5
+              "
+      >
+        <IoMdPersonAdd size={35} />
       </div>
     </aside>
   );
