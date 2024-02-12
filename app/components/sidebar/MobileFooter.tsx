@@ -27,6 +27,7 @@ const MobileFooter = () => {
         lg:hidden
       "
     >
+      {/*モバイル用フッターアイテム一覧*/}
       {routes.map((route) => (
         <MobileItem
           key={route.href}

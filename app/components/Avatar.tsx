@@ -1,14 +1,15 @@
 "use client";
 
-import { User } from "@prisma/client";
+import { User, Conversation } from "@prisma/client";
 
 import Image from "next/image";
 
 interface AvatarProps {
   user?: User;
+  conversation?: Conversation;
 }
 
-const Avatar: React.FC<AvatarProps> = ({ user }) => {
+const Avatar: React.FC<AvatarProps> = ({ user, conversation }) => {
   return (
     <div className="relative">
       <div
@@ -23,11 +24,19 @@ const Avatar: React.FC<AvatarProps> = ({ user }) => {
         md:w-11
       "
       >
-        <Image
-          fill
-          src={user?.image || "/images/placeholder.jpg"}
-          alt="Avatar"
-        />
+        {user != null ? (
+          <Image
+            fill
+            src={user?.image || "/images/placeholder.jpg"}
+            alt="Avatar"
+          />
+        ) : (
+          <Image
+            fill
+            src={conversation?.image || "/images/group.png"}
+            alt="Avatar"
+          />
+        )}
       </div>
       <span
         className="

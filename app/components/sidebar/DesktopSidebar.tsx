@@ -6,7 +6,9 @@ import DesktopItem from "./DesktopItem";
 import Link from "next/link";
 import { User } from "@prisma/client";
 import Avatar from "../Avatar";
-
+import { Modal, Button } from "antd";
+import SettingsModal from "./SettingModal";
+import axios from "axios";
 interface DesktopSidebar {
   currentUser: User;
 }
@@ -35,6 +37,7 @@ const DesktopSidebar: React.FC<DesktopSidebar> = ({ currentUser }) => {
     >
       <nav className="mt-4 flex flex-col justify-between">
         <ul role="list" className="flex flex-col items-center space-y-1">
+          {/*サイドバーアイテムの一覧*/}
           {routes.map((item) => (
             <DesktopItem
               key={item.label}
@@ -47,6 +50,8 @@ const DesktopSidebar: React.FC<DesktopSidebar> = ({ currentUser }) => {
           ))}
         </ul>
       </nav>
+
+      {/* ログイン中のユーザ*/}
       <nav className="mt-4 flex flex-col justify-between items-center">
         <div
           onClick={() => setIsOepn(true)}
@@ -55,6 +60,7 @@ const DesktopSidebar: React.FC<DesktopSidebar> = ({ currentUser }) => {
           <Avatar user={currentUser} />
         </div>
       </nav>
+      <SettingsModal isOpen={isOpen} setIsOpen={setIsOepn} user={currentUser} />
     </div>
   );
 };
