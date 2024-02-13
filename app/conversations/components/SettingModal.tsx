@@ -52,7 +52,12 @@ const SettingsModal = ({ isOpen, setIsOpen, data }: settingModalProps) => {
       <div className="relative mt-6 flex-1 px-4 sm:px-6">
         <div className="flex flex-col items-center">
           <div className="mb-2">
-            <Avatar user={otherUser} />
+            {/*チャットルームアイコン*/}
+            {data.isGroup ? (
+              <Avatar conversation={data} />
+            ) : (
+              <Avatar user={otherUser} />
+            )}
           </div>
           <div>{chatname}</div>
           <div className="text-sm text-gray-500">{status}</div>

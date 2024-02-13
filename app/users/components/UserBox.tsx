@@ -1,9 +1,10 @@
 import axios from "axios";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { User } from "@prisma/client";
 
 import Avatar from "@/app/components/Avatar";
+import { ModalContext } from "@/app/components/LoadingModal";
 
 interface UserBoxProps {
   data: User;
@@ -11,9 +12,11 @@ interface UserBoxProps {
 
 const UserBox: React.FC<UserBoxProps> = ({ data }) => {
   const router = useRouter();
+  const { openLM, closeLM } = useContext(ModalContext);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = useCallback(() => {
+    openLM();
     setIsLoading(true);
 
     axios
@@ -21,7 +24,10 @@ const UserBox: React.FC<UserBoxProps> = ({ data }) => {
       .then((data) => {
         router.push(`/conversations/${data.data.id}`);
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        setIsLoading(false);
+        closeLM();
+      });
   }, [data, router]);
 
   return (

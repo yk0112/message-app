@@ -88,7 +88,11 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
         )}
       >
         {/*チャットルームアイコン*/}
-        <Avatar user={otherUser} />
+        {data.isGroup ? (
+          <Avatar conversation={data} />
+        ) : (
+          <Avatar user={otherUser} />
+        )}
 
         <div className="min-w-0 flex-1">
           <div className="focus:outline-none">

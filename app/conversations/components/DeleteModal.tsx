@@ -1,9 +1,10 @@
 import { Modal, Button } from "antd";
 import { useRouter } from "next/navigation";
-import { ReactNode, useCallback, useMemo, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { Conversation, User } from "@prisma/client";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { ModalContext } from "@/app/components/LoadingModal";
 
 interface settingModalProps {
   isOpen: boolean;
@@ -15,10 +16,12 @@ interface settingModalProps {
 
 const DeleteModal = ({ isOpen, setIsOpen, data }: settingModalProps) => {
   const router = useRouter();
+  const { openLM, closeLM } = useContext(ModalContext);
   const [isLoading, setIsLoading] = useState(false);
 
   const onDelete = useCallback(() => {
     setIsLoading(true);
+    openLM();
 
     axios
       .delete(`/api/conversations/${data.id}`)
@@ -29,6 +32,7 @@ const DeleteModal = ({ isOpen, setIsOpen, data }: settingModalProps) => {
       .catch(() => toast.error("Something went wrong!"))
       .finally(() => {
         setIsLoading(false);
+        closeLM();
         setIsOpen(false);
       });
   }, [router, data]);
