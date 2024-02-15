@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-
+import { pusherServer } from "@/app/libs/pusher";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from "@/app/libs/prismadb";
+import { User } from "@prisma/client";
 
 export async function POST(request: Request) {
   try {
@@ -57,6 +58,19 @@ export async function POST(request: Request) {
       },
     });
 
+    // 新しいメッセージをクライアント側に通知
+    await pusherServer.trigger(conversationId, "message:new", newMessage);
+
+    const lastMessage =
+      updatedConversation.messages[updatedConversation.messages.length - 1];
+
+    // トークルームに含まれる全ユーザに通知
+    updatedConversation.users.map((user: User) => {
+      pusherServer.trigger(user.email!, "conversation:update", {
+        id: conversationId,
+        messages: [lastMessage],
+      });
+    });
     return NextResponse.json(newMessage);
   } catch (error) {
     console.log(error, "ERROR_MESSAGES");

@@ -1,12 +1,15 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import { NextResponse } from "next/server";
 import prisma from "@/app/libs/prismadb";
+import { pusherServer } from "@/app/libs/pusher";
+import { User } from "@prisma/client";
+import { warn } from "console";
 
 export async function POST(request: Request) {
   try {
     const currentUser = await getCurrentUser();
     const body = await request.json();
-    const { userId, isGroup, members, name } = body;
+    const { userId, isGroup, members, name, image } = body;
 
     if (!currentUser?.id || !currentUser?.email) {
       return new NextResponse("Unauthorized", { status: 400 });
@@ -21,6 +24,7 @@ export async function POST(request: Request) {
         data: {
           name,
           isGroup,
+          image,
           users: {
             connect: [
               // relationを定義
@@ -37,6 +41,13 @@ export async function POST(request: Request) {
           // inner joinで関連するUserレコードを取得
           users: true,
         },
+      });
+
+      //メンバー全員に新しいトークルームが作成されたことを通知
+      newConversation.users.forEach((user: User) => {
+        if (user.email) {
+          pusherServer.trigger(user.email, "conversation:new", newConversation);
+        }
       });
 
       return NextResponse.json(newConversation);
@@ -83,6 +94,13 @@ export async function POST(request: Request) {
       include: {
         users: true,
       },
+    });
+
+    //メンバー全員に新しいトークルームが作成されたことを通知
+    newConversation.users.map((user: User) => {
+      if (user.email) {
+        pusherServer.trigger(user.email, "conversation:new", newConversation);
+      }
     });
 
     return NextResponse.json(newConversation);

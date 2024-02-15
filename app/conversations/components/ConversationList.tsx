@@ -2,12 +2,16 @@
 import useConversation from "@/app/hooks/useConversation";
 import { FullConversationType } from "@/app/types";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { clsx } from "clsx";
 import ConversationBox from "./ConversationBox";
 import { IoMdPersonAdd } from "react-icons/io";
 import { User } from "@prisma/client";
 import MakeGroupModal from "./MakeGroupModal";
+import { useSession } from "next-auth/react";
+import { useMemo } from "react";
+import { pusherClient } from "@/app/libs/pusher";
+import { curry, find } from "lodash";
 
 interface ConversationListProps {
   initialItems: FullConversationType[];
@@ -20,9 +24,66 @@ const ConversationList: React.FC<ConversationListProps> = ({
 }) => {
   const [items, setItems] = useState(initialItems);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const router = useRouter();
-
+  const session = useSession();
   const { conversationId, isOpen } = useConversation();
+  const router = useRouter();
+  console.log(conversationId);
+
+  const pusherChannel = useMemo(() => {
+    return session.data?.user?.email;
+  }, [session.data?.user?.email]);
+
+  useEffect(() => {
+    if (!pusherChannel) {
+      return;
+    }
+
+    pusherClient.subscribe(pusherChannel);
+
+    // 最新メッセージの表示用イベントハンドラ
+    const updateHandler = (conversation: FullConversationType) => {
+      setItems((current) =>
+        current.map((currentConversation) => {
+          if (currentConversation.id === conversation.id) {
+            return {
+              ...currentConversation,
+              messages: conversation.messages,
+            };
+          }
+
+          return currentConversation;
+        }),
+      );
+    };
+
+    // トークルーム作成用イベントハンドラ
+    const newHandler = (conversation: FullConversationType) => {
+      setItems((current) => {
+        if (find(current, { id: conversation.id })) {
+          return current;
+        }
+
+        return [conversation, ...current];
+      });
+    };
+
+    // トークルーム削除用イベントハンドラ
+    const deleteHandler = (conversation: FullConversationType) => {
+      setItems((current) => {
+        return current.filter(
+          (currentConversation) => currentConversation.id !== conversation.id,
+        );
+      });
+
+      if (conversationId == conversation.id) {
+        router.push("/conversations");
+      }
+    };
+
+    pusherClient.bind("conversation:update", updateHandler);
+    pusherClient.bind("conversation:new", newHandler);
+    pusherClient.bind("conversation:delete", deleteHandler);
+  }, [pusherChannel, router, conversationId]);
 
   return (
     <div>

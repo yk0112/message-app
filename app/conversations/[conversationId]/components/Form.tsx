@@ -54,7 +54,7 @@ const Form = () => {
     >
       {/* メディアファイルの送信ボタン */}
       <CldUploadButton
-        options={{ maxFiles: 1 }}
+        options={{ maxFiles: 3 }}
         onUpload={handleUpload}
         uploadPreset="ivjsicny"
       >

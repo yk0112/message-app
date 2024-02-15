@@ -64,7 +64,7 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
       return lastMessage?.body;
     }
 
-    return "Started a conversation";
+    return "";
   }, [lastMessage]);
 
   return (

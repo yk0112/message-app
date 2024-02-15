@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from "@/app/libs/prismadb";
+import { pusherServer } from "@/app/libs/pusher";
 
 interface IParams {
   conversationId?: string;
@@ -56,6 +57,18 @@ export async function POST(request: Request, { params }: { params: IParams }) {
         },
       },
     });
+
+    // メッセージの閲覧状態をクライアント側に送信
+    await pusherServer.trigger(currentUser.email, "conversation:update", {
+      id: conversationId,
+      messages: [updatedMessage],
+    });
+
+    await pusherServer.trigger(
+      conversationId!,
+      "message:update",
+      updatedMessage,
+    );
 
     return new NextResponse("Success");
   } catch (error) {
