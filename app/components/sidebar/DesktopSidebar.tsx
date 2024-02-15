@@ -3,12 +3,9 @@
 import useRoutes from "@/app/hooks/useRoutes";
 import { useState } from "react";
 import DesktopItem from "./DesktopItem";
-import Link from "next/link";
 import { User } from "@prisma/client";
 import Avatar from "../Avatar";
-import { Modal, Button } from "antd";
 import SettingsModal from "./SettingModal";
-import axios from "axios";
 interface DesktopSidebar {
   currentUser: User;
 }

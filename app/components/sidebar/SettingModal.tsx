@@ -1,8 +1,7 @@
 import { Modal } from "antd";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import Avatar from "@/app/components/Avatar";
-import { ReactNode, useCallback, useMemo, useState } from "react";
-import { Conversation, User } from "@prisma/client";
+import { useContext, useMemo, useState } from "react";
+import { User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -10,6 +9,7 @@ import Input from "../inputs/Input";
 import Image from "next/image";
 import { CldUploadButton } from "next-cloudinary";
 import Button from "../Button";
+import { ModalContext } from "@/app/components/LoadingModal";
 
 interface settingModalProps {
   isOpen: boolean;
@@ -20,6 +20,7 @@ interface settingModalProps {
 const SettingsModal = ({ isOpen, setIsOpen, user }: settingModalProps) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const { openLM, closeLM } = useContext(ModalContext);
 
   const status = useMemo(() => {
     return "Active";
@@ -47,6 +48,7 @@ const SettingsModal = ({ isOpen, setIsOpen, user }: settingModalProps) => {
   };
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    openLM();
     setIsLoading(true);
 
     axios
@@ -56,7 +58,10 @@ const SettingsModal = ({ isOpen, setIsOpen, user }: settingModalProps) => {
         setIsOpen(false);
       })
       .catch(() => toast.error("更新時にエラーが発生しました"))
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        setIsLoading(false);
+        closeLM();
+      });
   };
 
   return (
