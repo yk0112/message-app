@@ -3,12 +3,41 @@
 import { User } from "@prisma/client";
 
 import UserBox from "./UserBox";
+import { useEffect, useState } from "react";
+import { pusherClient } from "@/app/libs/pusher";
 
 interface UserListProps {
   items: User[];
 }
 
 const UserList: React.FC<UserListProps> = ({ items }) => {
+  const [users, setUsers] = useState(items);
+
+  useEffect(() => {
+    pusherClient.subscribe("activeChannel");
+
+    const updateHandler = (data: { email: string; isLogin: boolean }) => {
+      setUsers((current: User) =>
+        current.map((currentUser: User) => {
+          if (currentUser.email === data.email) {
+            return {
+              ...currentUser,
+              isLogin: data.isLogin,
+            };
+          }
+
+          return currentUser;
+        }),
+      );
+    };
+    pusherClient.bind("active:update", updateHandler);
+
+    return () => {
+      pusherClient.unsubscribe("activeChannel");
+      pusherClient.unbind("active:update", updateHandler);
+    };
+  }, [users]);
+
   return (
     <aside
       className="
@@ -38,7 +67,7 @@ const UserList: React.FC<UserListProps> = ({ items }) => {
             People
           </div>
         </div>
-        {items.map((item) => (
+        {users.map((item) => (
           <UserBox key={item.id} data={item} />
         ))}
       </div>

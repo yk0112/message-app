@@ -4,6 +4,7 @@ import { HiChat } from "react-icons/hi";
 import { HiArrowLeftOnRectangle, HiUsers } from "react-icons/hi2";
 import { signOut } from "next-auth/react";
 import useConversation from "./useConversation";
+import axios from "axios";
 
 const useRoutes = () => {
   const pathname = usePathname();
@@ -26,7 +27,10 @@ const useRoutes = () => {
       {
         label: "Logout",
         href: "#",
-        onClick: () => signOut(),
+        onClick: () => {
+          axios.post("api/active", { login: false });
+          signOut();
+        },
         icon: HiArrowLeftOnRectangle,
       },
     ],

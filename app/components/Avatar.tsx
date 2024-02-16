@@ -1,10 +1,7 @@
 "use client";
 
 import { User, Conversation } from "@prisma/client";
-
 import Image from "next/image";
-import { useContext } from "react";
-import { ActiveListContext } from "./ActiveList";
 
 interface AvatarProps {
   user?: User;
@@ -12,8 +9,6 @@ interface AvatarProps {
 }
 
 const Avatar: React.FC<AvatarProps> = ({ user, conversation }) => {
-  const { members } = useContext(ActiveListContext);
-  const isActive = members.indexOf(user?.email!) !== -1;
   return (
     <div className="relative">
       <div
@@ -42,7 +37,7 @@ const Avatar: React.FC<AvatarProps> = ({ user, conversation }) => {
           />
         )}
       </div>
-      {isActive && (
+      {user != null && user.isLogin && (
         <span
           className="
             absolute 
