@@ -6,9 +6,14 @@ import Image from "next/image";
 interface AvatarProps {
   user?: User;
   conversation?: Conversation;
+  activeHidden?: boolean;
 }
 
-const Avatar: React.FC<AvatarProps> = ({ user, conversation }) => {
+const Avatar: React.FC<AvatarProps> = ({
+  user,
+  conversation,
+  activeHidden = false,
+}) => {
   return (
     <div className="relative">
       <div
@@ -37,7 +42,7 @@ const Avatar: React.FC<AvatarProps> = ({ user, conversation }) => {
           />
         )}
       </div>
-      {user != null && user.isLogin && (
+      {user != null && user.isLogin && !activeHidden && (
         <span
           className="
             absolute 
