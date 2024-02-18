@@ -2,14 +2,15 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Conversation, Message, User } from "@prisma/client";
 import { format } from "date-fns";
-import { useSession } from "next-auth/react";
 import clsx from "clsx";
 import { FullConversationType } from "@/app/types";
 import useOtherUser from "@/app/hooks/useOtherUser";
 import Avatar from "@/app/components/Avatar";
 import ConversationBoxLayout from "./ConversationBoxLayout";
+import { useSession } from "next-auth/react";
+import { User } from "@prisma/client";
+import { AiOutlineExclamationCircle } from "react-icons/ai";
 
 interface ConversationBoxProps {
   data: FullConversationType;
@@ -21,8 +22,8 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
   selected,
 }) => {
   const otherUser = useOtherUser(data);
-  const session = useSession();
   const router = useRouter();
+  const session = useSession();
 
   const handleClick = useCallback(() => {
     router.push(`/conversations/${data.id}`);
@@ -34,6 +35,18 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
     return messages[messages.length - 1];
   }, [data.messages]);
 
+  const lastMessageText = useMemo(() => {
+    if (lastMessage?.image) {
+      return "画像が送信されました";
+    }
+
+    if (lastMessage?.body) {
+      return lastMessage?.body;
+    }
+
+    return "";
+  }, [lastMessage]);
+
   const userEmail = useMemo(
     () => session.data?.user?.email,
     [session.data?.user?.email],
@@ -41,7 +54,7 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
 
   const hasSeen = useMemo(() => {
     if (!lastMessage) {
-      return false;
+      return true;
     }
 
     const seenArray = lastMessage.seen || [];
@@ -54,18 +67,6 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
       seenArray.filter((user: User) => user.email === userEmail).length !== 0
     );
   }, [userEmail, lastMessage]);
-
-  const lastMessageText = useMemo(() => {
-    if (lastMessage?.image) {
-      return "Sent an image";
-    }
-
-    if (lastMessage?.body) {
-      return lastMessage?.body;
-    }
-
-    return "";
-  }, [lastMessage]);
 
   return (
     <ConversationBoxLayout data={data}>
@@ -117,18 +118,17 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({
               )}
             </div>
             {/*チャットルーム内の最後のメッセージ*/}
-            <p
-              className={clsx(
-                `
-              truncate 
-              text-sm
-              `,
-                hasSeen ? "text-gray-500" : "text-black font-medium",
-              )}
-            >
-              {lastMessageText}
-            </p>
+            <p className="truncate text-sm text-gray-500">{lastMessageText}</p>
           </div>
+        </div>
+        <div
+          className="
+                rounded-full 
+                text-green-400 
+                transition
+              "
+        >
+          {!hasSeen && <AiOutlineExclamationCircle size={30} />}
         </div>
       </div>
     </ConversationBoxLayout>

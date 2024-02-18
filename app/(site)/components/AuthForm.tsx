@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { BsGithub, BsGoogle } from "react-icons/bs";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -64,15 +64,17 @@ const AuthForm = () => {
       })
         .then((callback) => {
           if (callback?.error) {
-            toast.error("somthign wrong");
+            toast.error("エラーが発生しました");
           }
 
           if (callback?.ok && !callback?.error) {
-            toast.success("login!");
+            toast.success("ログインに成功しました");
             router.push("/users");
           }
         })
-        .finally(() => setIsLoading(false));
+        .finally(() => {
+          setIsLoading(false);
+        });
     }
   };
   const socialAction = (action: string) => {
@@ -81,7 +83,7 @@ const AuthForm = () => {
     signIn(action, { redirect: false })
       .then((callback) => {
         if (callback?.error) {
-          toast.error("somthign wrong");
+          toast.error("エラーが発生しました");
         }
 
         if (callback?.ok && !callback?.error) {
@@ -111,7 +113,7 @@ const AuthForm = () => {
               errors={errors}
               required={false}
               id="name"
-              label="Name"
+              label="アカウント名"
             />
           )}
           <Input
@@ -120,7 +122,7 @@ const AuthForm = () => {
             errors={errors}
             required={false}
             id="email"
-            label="Email address"
+            label="メールアドレス"
             type="email"
           />
           <Input
@@ -129,12 +131,12 @@ const AuthForm = () => {
             errors={errors}
             required={false}
             id="password"
-            label="Password"
+            label="パスワード"
             type="password"
           />
           <div>
             <Button disabled={isLoading} fullwidth type="submit">
-              {variant === "LOGIN" ? "Sign in" : "Register"}
+              {variant === "LOGIN" ? "ログイン" : "登録"}
             </Button>
           </div>
         </form>
@@ -152,9 +154,7 @@ const AuthForm = () => {
               <div className="w-full border-t border-gray-300" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-2 text-gray-500">
-                Or continue with
-              </span>
+              <span className="bg-white px-2 text-gray-500">または</span>
             </div>
           </div>
 
@@ -182,11 +182,11 @@ const AuthForm = () => {
         >
           <div>
             {variant === "LOGIN"
-              ? "New to Messenger?"
-              : "Already have an account?"}
+              ? "初めてですか？"
+              : "アカウントをお持ちですか？"}
           </div>
           <div onClick={toggleVariant} className="underline cursor-pointer">
-            {variant === "LOGIN" ? "Create an account" : "Login"}
+            {variant === "LOGIN" ? "アカウント作成" : "ログイン"}
           </div>
         </div>
       </div>

@@ -6,8 +6,6 @@ import DesktopItem from "./DesktopItem";
 import { User } from "@prisma/client";
 import Avatar from "../Avatar";
 import SettingsModal from "./SettingModal";
-import { useSession } from "next-auth/react";
-import { pusherClient } from "@/app/libs/pusher";
 interface DesktopSidebar {
   currentUser: User;
 }
@@ -27,7 +25,7 @@ const DesktopSidebar: React.FC<DesktopSidebar> = ({ currentUser }) => {
         lg:w-20 
         xl:px-6
         lg:overflow-y-auto 
-        lg:bg-white 
+        lg:bg-slate-700 
         lg:border-r-[1px]
         lg:pb-4
         lg:flex

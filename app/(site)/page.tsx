@@ -31,7 +31,7 @@ export default function Home() {
 	 text-gray-900
 	"
         >
-          Sign in to your account
+          Message App
         </h2>
       </div>
       <AuthForm />

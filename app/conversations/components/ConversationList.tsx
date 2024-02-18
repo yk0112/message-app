@@ -6,12 +6,13 @@ import { useEffect, useState } from "react";
 import { clsx } from "clsx";
 import ConversationBox from "./ConversationBox";
 import { IoMdPersonAdd } from "react-icons/io";
-import { User } from "@prisma/client";
+import { Conversation, User } from "@prisma/client";
 import MakeGroupModal from "./MakeGroupModal";
 import { useSession } from "next-auth/react";
 import { useMemo } from "react";
 import { pusherClient } from "@/app/libs/pusher";
-import { curry, find } from "lodash";
+import { find, update } from "lodash";
+import useChangeCov from "@/app/hooks/useChangeCov";
 
 interface ConversationListProps {
   initialItems: FullConversationType[];
@@ -27,7 +28,6 @@ const ConversationList: React.FC<ConversationListProps> = ({
   const session = useSession();
   const { conversationId, isOpen } = useConversation();
   const router = useRouter();
-  console.log(conversationId);
 
   const pusherChannel = useMemo(() => {
     return session.data?.user?.email;
@@ -83,7 +83,36 @@ const ConversationList: React.FC<ConversationListProps> = ({
     pusherClient.bind("conversation:update", updateHandler);
     pusherClient.bind("conversation:new", newHandler);
     pusherClient.bind("conversation:delete", deleteHandler);
+
+    return () => {
+      pusherClient.unsubscribe(pusherChannel);
+      pusherClient.unbind("conversation:update", updateHandler);
+      pusherClient.unbind("conversation:new", newHandler);
+      pusherClient.unbind("conversation:delete", deleteHandler);
+    };
   }, [pusherChannel, router, conversationId]);
+
+  useEffect(() => {
+    pusherClient.subscribe("activeChannel");
+
+    const updateHandler = (data: { email: string; isLogin: boolean }) => {
+      setItems((items: FullConversationType[]) =>
+        items.map((conv: FullConversationType) => {
+          if (!conv.isGroup) {
+            return useChangeCov(conv, data);
+          }
+          return conv;
+        }),
+      );
+    };
+
+    pusherClient.bind("active:update", updateHandler);
+
+    return () => {
+      pusherClient.unsubscribe("activeChannel");
+      pusherClient.unbind("active:update", updateHandler);
+    };
+  }, [items]);
 
   return (
     <div>
@@ -96,26 +125,27 @@ const ConversationList: React.FC<ConversationListProps> = ({
         lg:pb-0
         lg:left-20 
         lg:w-80 
-        lg:block
-        overflow-y-auto 
+        lg:block 
         border-r 
         border-gray-200 
       `,
           isOpen ? "hidden" : "block w-full left-0",
         )}
       >
-        <div className="px-5 h-[90%]">
+        <div className="px-5 h-full">
           <div className="flex justify-between mb-4 pt-4">
             <div className="text-2xl font-bold text-neutral-800">Messages</div>
           </div>
           {/* チャットルーム一覧表示*/}
-          {items.map((item) => (
-            <ConversationBox
-              key={item.id}
-              data={item}
-              selected={conversationId === item.id}
-            />
-          ))}
+          <div className="h-[85%] overflow-auto">
+            {items.map((item) => (
+              <ConversationBox
+                key={item.id}
+                data={item}
+                selected={conversationId === item.id}
+              />
+            ))}
+          </div>
         </div>
         {/* グループチャット制作用ボタン */}
         <div
@@ -129,7 +159,8 @@ const ConversationList: React.FC<ConversationListProps> = ({
                 hover:opacity-75 
 		shadow-lg
                 transition
-		absolute bottom-5 right-5
+		absolute lg:bottom-5 lg:right-5
+                md:bottom-20 md:right-5
               "
         >
           <IoMdPersonAdd size={35} />

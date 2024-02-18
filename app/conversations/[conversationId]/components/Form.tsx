@@ -8,6 +8,7 @@ import { HiChevronLeft } from "react-icons/hi";
 import MessageInput from "./MessageInput";
 import { CldUploadButton } from "next-cloudinary";
 import { GrAttachment } from "react-icons/gr";
+import toast from "react-hot-toast";
 
 const Form = () => {
   const { conversationId } = useConversation();
@@ -32,10 +33,14 @@ const Form = () => {
   };
 
   const handleUpload = (result: any) => {
-    axios.post("/api/messages", {
-      image: result.info.secure_url,
-      conversationId: conversationId,
-    });
+    if (result.info.resourceType != "image") {
+      toast.error("画像ファイルのみ送信可能です");
+    } else {
+      axios.post("/api/messages", {
+        image: result.info.secure_url,
+        conversationId: conversationId,
+      });
+    }
   };
 
   return (
@@ -54,7 +59,11 @@ const Form = () => {
     >
       {/* メディアファイルの送信ボタン */}
       <CldUploadButton
-        options={{ maxFiles: 3 }}
+        options={{
+          maxFiles: 1,
+          resourceType: "image",
+          singleUploadAutoClose: true,
+        }}
         onUpload={handleUpload}
         uploadPreset="ivjsicny"
       >
@@ -70,7 +79,7 @@ const Form = () => {
           register={register}
           errors={errors}
           required
-          placeholder="Write a message"
+          placeholder="メッセージを入力"
         />
         <button
           type="submit"
@@ -79,7 +88,7 @@ const Form = () => {
             p-2 
             bg-green-500 
             cursor-pointer 
-            hover:bg-sky-600 
+            hover:opacity-75  
             transition
           "
         >

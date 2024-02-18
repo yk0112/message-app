@@ -41,13 +41,26 @@ export async function POST(request: Request, { params }: { params: IParams }) {
       return NextResponse.json(conversation);
     }
 
+    // snder,seeenをそのままincludeすると大きすぎる?
     const updatedMessage = await prisma.message.update({
       where: {
         id: lastMessage.id,
       },
       include: {
-        sender: true,
-        seen: true,
+        sender: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        seen: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
       },
       data: {
         seen: {

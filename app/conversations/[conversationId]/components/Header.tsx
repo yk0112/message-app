@@ -53,16 +53,19 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
 	   transition 
 	   cursor-pointer
 	   "
-            href="/conversation"
+            href="/conversations"
           >
             <HiChevronLeft size={32} />
           </Link>
-          <Avatar user={otherUser} />
+          {/*チャットルームアイコン*/}
+          {conversation.isGroup ? (
+            <Avatar conversation={conversation} />
+          ) : (
+            <Avatar user={otherUser} />
+          )}
+
           <div className="flex flex-col">
             <div>{conversation.name || otherUser.name}</div>
-            <div className="text-sm font-light text-neutral-500">
-              {statusText}
-            </div>
           </div>
         </div>
         <HiEllipsisHorizontal

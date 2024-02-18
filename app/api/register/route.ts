@@ -12,7 +12,6 @@ export async function POST(request: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // return "user" object
     const user = await prisma.user.create({
       data: {
         email,
@@ -21,7 +20,7 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json(user); // status == 200
+    return NextResponse.json(user);
   } catch (error: any) {
     console.log(error, "REGISTER_ERROR");
     return new NextResponse("Internal Error", { status: 500 });
