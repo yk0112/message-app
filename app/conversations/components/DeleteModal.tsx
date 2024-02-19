@@ -29,7 +29,7 @@ const DeleteModal = ({ isOpen, setIsOpen, data }: settingModalProps) => {
         router.push("/conversations");
         router.refresh();
       })
-      .catch(() => toast.error("Something went wrong!"))
+      .catch(() => toast.error("エラーが発生しました"))
       .finally(() => {
         setIsLoading(false);
         closeLM();
