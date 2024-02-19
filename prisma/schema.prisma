@@ -19,11 +19,12 @@ model User {
   hashedPassword String?
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
+  isLogin Boolean?
   
   // many to many
   conversationIds String[] @db.ObjectId
   conversations Conversation[] @relation(fields: [conversationIds], references: [id])
-  
+   
   seenMessageIds String[] @db.ObjectId
   seenMessages Message[] @relation("Seen", fields: [seenMessageIds], references: [id])
   
@@ -57,6 +58,7 @@ model Conversation {
   lastMessageAt DateTime @default(now())
   name String?
   isGroup Boolean?
+  image String? 
 
   messagesIds String[] @db.ObjectId
   messages Message[]
