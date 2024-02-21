@@ -53,7 +53,7 @@ const AuthForm = () => {
       axios
         .post("/api/register", data)
         .then(() => signIn("credentials", data))
-        .catch(() => toast.error("somthing wrong"))
+        .catch(() => toast.error("エラーが発生しました"))
         .finally(() => setIsLoading(false));
     }
 
