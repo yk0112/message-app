@@ -1,14 +1,15 @@
 "use client";
 import { IconType } from "react-icons";
-import clsx from "clsx";
 
 interface AuthSocialButtonProps {
   icon: IconType;
+  name: String;
   onClick: () => void;
 }
 
 const AuthSocialButton: React.FC<AuthSocialButtonProps> = ({
   icon: Icon,
+  name: name,
   onClick,
 }) => {
   return (
@@ -30,9 +31,11 @@ const AuthSocialButton: React.FC<AuthSocialButtonProps> = ({
     	ring-gray-300
     	hover-bg-gray-50
     	focus:outline-offset-0
+	gap-2
     	"
     >
       <Icon />
+      <h3 className="text-sm">{name}で続ける</h3>
     </button>
   );
 };

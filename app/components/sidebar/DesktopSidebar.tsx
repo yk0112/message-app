@@ -1,7 +1,7 @@
 "use client";
 
 import useRoutes from "@/app/hooks/useRoutes";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DesktopItem from "./DesktopItem";
 import { User } from "@prisma/client";
 import Avatar from "../Avatar";
@@ -31,6 +31,7 @@ const DesktopSidebar: React.FC<DesktopSidebar> = ({ currentUser }) => {
         lg:flex
         lg:flex-col
         justify-between
+	shadow-md
       "
     >
       <nav className="mt-4 flex flex-col justify-between">

@@ -29,9 +29,9 @@ const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast }) => {
   const sender = clsx("text-sm text-gray-500 mb-1", isOwn && "text-end");
 
   const message = clsx(
-    "text-sm w-fit overflow-hidden",
+    "text-sm w-fit overflow-hidden shadow-md",
     isOwn ? "bg-green-500 text-white" : "bg-gray-100",
-    data.image ? "rounded-md p-0" : "rounded-full py-2 px-3",
+    data.image ? "rounded-md p-0" : "rounded-md py-2 px-3",
   );
 
   const MessageElem = () => {

@@ -6,12 +6,12 @@ import { useEffect, useState } from "react";
 import { clsx } from "clsx";
 import ConversationBox from "./ConversationBox";
 import { IoMdPersonAdd } from "react-icons/io";
-import { Conversation, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import MakeGroupModal from "./MakeGroupModal";
 import { useSession } from "next-auth/react";
 import { useMemo } from "react";
 import { pusherClient } from "@/app/libs/pusher";
-import { find, update } from "lodash";
+import { find } from "lodash";
 import useChangeCov from "@/app/hooks/useChangeCov";
 
 interface ConversationListProps {

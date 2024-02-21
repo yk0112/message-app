@@ -4,7 +4,7 @@ import axios from "axios";
 import useConversation from "@/app/hooks/useConversation";
 import { FullMessageType } from "@/app/types";
 import MessageBox from "./MessageBox";
-import { pusherClient, pusherServer } from "@/app/libs/pusher";
+import { pusherClient } from "@/app/libs/pusher";
 import { find } from "lodash";
 
 interface BodyProps {

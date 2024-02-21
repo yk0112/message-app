@@ -1,7 +1,6 @@
 "use client";
 
 import ReactSelect from "react-select";
-import Avatar from "../Avatar";
 import Image from "next/image";
 
 interface SelectProps {

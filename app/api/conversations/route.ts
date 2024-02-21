@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import prisma from "@/app/libs/prismadb";
 import { pusherServer } from "@/app/libs/pusher";
 import { User } from "@prisma/client";
-import { warn } from "console";
 
 export async function POST(request: Request) {
   try {

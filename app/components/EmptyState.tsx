@@ -1,5 +1,3 @@
-import { signOut } from "next-auth/react";
-
 const EmptyState = () => {
   return (
     <div

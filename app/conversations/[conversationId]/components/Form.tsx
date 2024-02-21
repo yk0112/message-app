@@ -1,10 +1,9 @@
 "use client";
 
-import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
+import { HiPaperAirplane } from "react-icons/hi2";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
 import useConversation from "@/app/hooks/useConversation";
-import { HiChevronLeft } from "react-icons/hi";
 import MessageInput from "./MessageInput";
 import { CldUploadButton } from "next-cloudinary";
 import { GrAttachment } from "react-icons/gr";

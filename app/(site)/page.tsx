@@ -1,4 +1,3 @@
-import Image from "next/image";
 import AuthForm from "./components/AuthForm";
 
 export default function Home() {
@@ -14,21 +13,19 @@ export default function Home() {
     	bg-gray-100"
     >
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <Image
-          height="48"
-          width="48"
-          className="mx-auto w-auto"
-          src="/images/logo.png"
-          alt="Logo"
-        />
         <h2
           className="
-         mt-6
+         p-3
 	 text-center
-	 text-3xl
+	 text-5xl
 	 font-bold
 	 tracking-tight
-	 text-gray-900
+	 bg-gradient-to-r 
+	 from-blue-600 
+	 via-green-500 
+	 to-indigo-400 
+	 text-transparent 
+	 bg-clip-text
 	"
         >
           Message App
