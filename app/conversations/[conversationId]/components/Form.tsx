@@ -32,7 +32,19 @@ const Form = () => {
   };
 
   const handleUpload = (result: any) => {
-    if (result.info.resourceType != "image") {
+    const url = result.info.secure_url;
+    const imageExtensions: string[] = [
+      "jpg",
+      "jpeg",
+      "png",
+      "gif",
+      "bmp",
+      "tiff",
+      "svg",
+    ];
+    const extension: string = url.split(".").pop()?.toLowerCase() || "";
+
+    if (!imageExtensions.includes(extension)) {
       toast.error("画像ファイルのみ送信可能です");
     } else {
       axios.post("/api/messages", {
