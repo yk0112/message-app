@@ -19,7 +19,6 @@ const getConversations = async () => {
         },
       },
       include: {
-        // usersモデル + messageモデル + sender + seed
         users: true,
         messages: {
           include: {
@@ -30,6 +29,8 @@ const getConversations = async () => {
       },
     });
 
+    console.log("Success");
+    console.log(conversations);
     return conversations;
   } catch (error: any) {
     return [];
