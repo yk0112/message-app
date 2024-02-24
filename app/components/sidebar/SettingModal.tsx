@@ -42,9 +42,25 @@ const SettingsModal = ({ isOpen, setIsOpen, user }: settingModalProps) => {
   const image = watch("image");
 
   const handleUpload = (result: any) => {
-    setValue("image", result.info.secure_url, {
-      shouldValidate: true,
-    });
+    const url = result.info.secure_url;
+    const imageExtensions: string[] = [
+      "jpg",
+      "jpeg",
+      "png",
+      "gif",
+      "bmp",
+      "tiff",
+      "svg",
+    ];
+    const extension: string = url.split(".").pop()?.toLowerCase() || "";
+
+    if (!imageExtensions.includes(extension)) {
+      toast.error("画像ファイルのみ送信可能です");
+    } else {
+      setValue("image", result.info.secure_url, {
+        shouldValidate: true,
+      });
+    }
   };
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
